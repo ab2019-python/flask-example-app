@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from flask import Flask, render_template, request, redirect, make_response
+from flask import Flask, render_template, request, redirect, make_response, abort
 from bson.objectid import ObjectId
 import hashlib
 import uuid
@@ -28,6 +28,9 @@ def get_user_from_session():
 
 @app.route("/remove/<document_id>")
 def remove(document_id):
+	if not get_user_from_session():
+		abort(401)
+
 	db.messages.remove({
 		"_id": ObjectId(document_id)
 	})
@@ -35,6 +38,9 @@ def remove(document_id):
 
 @app.route("/edit/<document_id>", methods=["GET", "POST"])
 def edit(document_id):
+	if not get_user_from_session():
+		abort(401)
+
 	if request.method == "POST":
 		sender = request.form['sender']
 		body = request.form['body']
