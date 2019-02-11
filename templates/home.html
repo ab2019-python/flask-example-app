@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Messages</h3>
+<form action="." method="post">
+	nickname: <br />
+	<input type="text" name="sender" />
+	<br />
+	message: <br />
+	<textarea name="body" rows="5" cols="50"></textarea>
+	<br />
+	<input type="submit" value="save" >
+</form>
+{% for message in messages %}
+<p>
+	{{ message.sender }}: {{ message.body }} <br />
+	<a href="/edit/{{ message._id }}">edit</a>
+	<a href="/remove/{{ message._id }}">remove</a>
+</p>
+{% endfor %}
+
+{% endblock %}

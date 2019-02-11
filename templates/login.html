@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if success %}
+	Hosgeldin. Admine giris yapmak icin <a href="/admin/">buraya</a> tikla.
+{% else %}
+	<form action="/login" method="post">
+	E-mail: <br />
+	<input type="email" name="email" /> <br />
+	Parola: <br />
+	<input type="password" name="password" /> <br />
+	<input type="submit" value="Login" />
+	</form>
+{% endif %}
+{% endblock %}
