@@ -9,6 +9,23 @@ client = MongoClient()
 db = client.ab2019
 
 
+def get_user_from_session():
+	session_id = request.cookies.get('session_id')
+	session = db.sessions.find_one({
+		"session_id": session_id,
+	})
+
+	if not session:
+		return
+
+	user_id = session['user_id']
+	user = db.users.find_one({
+		"_id": user_id,
+		"is_admin": True,
+	})
+
+	return user
+
 @app.route("/remove/<document_id>")
 def remove(document_id):
 	db.messages.remove({
@@ -53,6 +70,19 @@ def home():
 	return render_template('home.html', messages=get_messages())
 
 
+@app.route("/admin")
+def admin():
+	user = get_user_from_session()
+
+	if not user:
+		return "Forbidden."
+
+	return render_template(
+		"admin.html",
+		messages=get_messages(),
+		user=user,
+	)
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 	if request.method == "POST":
@@ -70,7 +100,7 @@ def login():
 		if not user:
 			return "Wrong email or password."
 
-		session_id = str(uuid.uuid4());
+		session_id = str(uuid.uuid4())
 
 		db.sessions.insert({
 			"session_id": session_id,

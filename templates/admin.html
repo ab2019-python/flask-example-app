@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Moderate Messages</h3>
+
+{% for message in messages %}
+<p>
+	{{ message.sender }}: {{ message.body }} <br />
+	<a href="/edit/{{ message._id }}">edit</a>
+	<a href="/remove/{{ message._id }}">remove</a>
+</p>
+{% endfor %}
+
+{% endblock %}
